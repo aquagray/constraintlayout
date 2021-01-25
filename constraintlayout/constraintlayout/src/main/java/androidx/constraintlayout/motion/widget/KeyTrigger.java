@@ -25,10 +25,6 @@ import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
-<<<<<<< Updated upstream
-=======
-import androidx.constraintlayout.motion.utils.ViewSpline;
->>>>>>> Stashed changes
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.R;
 

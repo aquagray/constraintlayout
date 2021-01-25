@@ -19,17 +19,12 @@ import android.os.Build;
 import android.util.Log;
 import android.util.SparseArray;
 
-<<<<<<< Updated upstream:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/widget/TimeCycleSplineSet.java
-import androidx.constraintlayout.motion.utils.CurveFit;
+ import androidx.constraintlayout.motion.utils.CurveFit;
 import androidx.constraintlayout.motion.utils.Oscillator;
-=======
-import androidx.constraintlayout.core.motion.utils.CurveFit;
+
 import androidx.constraintlayout.core.motion.utils.KeyCache;
-import androidx.constraintlayout.core.motion.utils.TimeCycleSplineSet;
-import androidx.constraintlayout.motion.widget.Key;
-import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.constraintlayout.motion.widget.Widget;
->>>>>>> Stashed changes:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/utils/ViewTimeCycle.java
+
+
 import androidx.constraintlayout.widget.ConstraintAttribute;
 
 import java.lang.reflect.InvocationTargetException;
@@ -57,9 +52,7 @@ public abstract class TimeCycleSplineSet {
     protected boolean mContinue = false;
     long last_time;
     float last_cycle = Float.NaN;
-
-<<<<<<< Updated upstream:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/widget/TimeCycleSplineSet.java
-    @Override
+     @Override
     public String toString() {
         String str = mType;
         DecimalFormat df = new DecimalFormat("##.##");
@@ -72,10 +65,7 @@ public abstract class TimeCycleSplineSet {
     public void setType(String type) {
         mType = type;
     }
-
-=======
->>>>>>> Stashed changes:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/utils/ViewTimeCycle.java
-    public abstract boolean setProperty(Widget view, float t, long time, KeyCache cache);
+     public abstract boolean setProperty(Widget view, float t, long time, KeyCache cache);
 
     public float get(float pos, long time, Widget view, KeyCache cache) {
         mCurveFit.getPos(pos, mCache);

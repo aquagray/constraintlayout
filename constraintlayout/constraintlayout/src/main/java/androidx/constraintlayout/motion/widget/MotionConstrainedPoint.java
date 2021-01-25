@@ -20,14 +20,10 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 
-<<<<<<< Updated upstream
+
 import androidx.constraintlayout.core.widgets.ConstraintWidget;
 import androidx.constraintlayout.motion.utils.Easing;
-=======
-import androidx.constraintlayout.core.motion.utils.Easing;
-import androidx.constraintlayout.core.widgets.ConstraintWidget;
-import androidx.constraintlayout.motion.utils.ViewSpline;
->>>>>>> Stashed changes
+
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.ConstraintSet;
 
