@@ -489,7 +489,7 @@ class MotionPaths implements Comparable<MotionPaths> {
     double[] mTempDelta = new double[18];
 
     // Called on the start Time Point
-    void setView(float position, View view, int[] toUse, double[] data, double[] slope, double[] cycle) {
+    void setView(float position, Widget view, int[] toUse, double[] data, double[] slope, double[] cycle) {
         float v_x = x;
         float v_y = y;
         float v_width = width;
@@ -503,7 +503,7 @@ class MotionPaths implements Comparable<MotionPaths> {
         String mod;
 
         if (DEBUG) {
-            mod = view.getContext().getResources().getResourceEntryName(view.getId()) + " <- ";
+            mod = view.getTypeName() + " <- ";
         }
         if (toUse.length != 0 && mTempValue.length <= toUse[toUse.length - 1]) {
             int scratch_data_length = toUse[toUse.length - 1] + 1;
@@ -523,9 +523,7 @@ class MotionPaths implements Comparable<MotionPaths> {
             double deltaCycle = (cycle != null) ? cycle[i] : 0.0;
             float value = (float) (Double.isNaN(mTempValue[i]) ? deltaCycle : mTempValue[i] + deltaCycle);
             float dvalue = (float) mTempDelta[i];
-            if (DEBUG) {
-                Log.v(TAG, Debug.getName(view) + " set " + names[i]);
-            }
+
             switch (i) {
                 case OFF_POSITION:
                     delta_path = value;

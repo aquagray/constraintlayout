@@ -16,19 +16,25 @@
 package androidx.constraintlayout.motion.widget;
 
 import android.os.Build;
-
-import androidx.constraintlayout.widget.ConstraintAttribute;
-import androidx.constraintlayout.motion.utils.CurveFit;
-
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.View;
+
+<<<<<<< Updated upstream:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/widget/TimeCycleSplineSet.java
+import androidx.constraintlayout.motion.utils.CurveFit;
+import androidx.constraintlayout.motion.utils.Oscillator;
+=======
+import androidx.constraintlayout.core.motion.utils.CurveFit;
+import androidx.constraintlayout.core.motion.utils.KeyCache;
+import androidx.constraintlayout.core.motion.utils.TimeCycleSplineSet;
+import androidx.constraintlayout.motion.widget.Key;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.motion.widget.Widget;
+>>>>>>> Stashed changes:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/utils/ViewTimeCycle.java
+import androidx.constraintlayout.widget.ConstraintAttribute;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-
-import androidx.constraintlayout.motion.utils.Oscillator;
 
 /**
  * This engine allows manipulation of attributes by wave shapes oscillating in time
@@ -52,6 +58,7 @@ public abstract class TimeCycleSplineSet {
     long last_time;
     float last_cycle = Float.NaN;
 
+<<<<<<< Updated upstream:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/widget/TimeCycleSplineSet.java
     @Override
     public String toString() {
         String str = mType;
@@ -66,9 +73,11 @@ public abstract class TimeCycleSplineSet {
         mType = type;
     }
 
-    public abstract boolean setProperty(View view, float t, long time, KeyCache cache);
+=======
+>>>>>>> Stashed changes:constraintlayout/constraintlayout/src/main/java/androidx/constraintlayout/motion/utils/ViewTimeCycle.java
+    public abstract boolean setProperty(Widget view, float t, long time, KeyCache cache);
 
-    public float get(float pos, long time, View view, KeyCache cache) {
+    public float get(float pos, long time, Widget view, KeyCache cache) {
         mCurveFit.getPos(pos, mCache);
         float period = mCache[CURVE_PERIOD];
         if (period == 0) {
@@ -220,7 +229,7 @@ public abstract class TimeCycleSplineSet {
 
     static class ElevationSet extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.setElevation(get(t, time, view, cache));
             }
@@ -230,7 +239,7 @@ public abstract class TimeCycleSplineSet {
 
     static class AlphaSet extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setAlpha(get(t, time, view, cache));
             return mContinue;
         }
@@ -238,7 +247,7 @@ public abstract class TimeCycleSplineSet {
 
     static class RotationSet extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setRotation(get(t, time, view, cache));
             return mContinue;
         }
@@ -246,7 +255,7 @@ public abstract class TimeCycleSplineSet {
 
     static class RotationXset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setRotationX(get(t, time, view, cache));
             return mContinue;
         }
@@ -254,7 +263,7 @@ public abstract class TimeCycleSplineSet {
 
     static class RotationYset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setRotationY(get(t, time, view, cache));
             return mContinue;
         }
@@ -262,11 +271,11 @@ public abstract class TimeCycleSplineSet {
 
     static class PathRotate extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             return mContinue;
         }
 
-        public boolean setPathRotate(View view, KeyCache cache, float t, long time, double dx, double dy) {
+        public boolean setPathRotate(Widget view, KeyCache cache, float t, long time, double dx, double dy) {
             view.setRotation(get(t, time, view, cache) + (float) Math.toDegrees(Math.atan2(dy, dx)));
             return mContinue;
         }
@@ -274,7 +283,7 @@ public abstract class TimeCycleSplineSet {
 
     static class ScaleXset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setScaleX(get(t, time, view, cache));
             return mContinue;
         }
@@ -282,7 +291,7 @@ public abstract class TimeCycleSplineSet {
 
     static class ScaleYset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setScaleY(get(t, time, view, cache));
             return mContinue;
         }
@@ -290,7 +299,7 @@ public abstract class TimeCycleSplineSet {
 
     static class TranslationXset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setTranslationX(get(t, time, view, cache));
             return mContinue;
         }
@@ -298,7 +307,7 @@ public abstract class TimeCycleSplineSet {
 
     static class TranslationYset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setTranslationY(get(t, time, view, cache));
             return mContinue;
         }
@@ -306,7 +315,7 @@ public abstract class TimeCycleSplineSet {
 
     static class TranslationZset extends TimeCycleSplineSet {
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.setTranslationZ(get(t, time, view, cache));
             }
@@ -359,7 +368,7 @@ public abstract class TimeCycleSplineSet {
         }
 
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             mCurveFit.getPos(t, mTempValues);
             float period = mTempValues[mTempValues.length - 2];
             float offset = mTempValues[mTempValues.length - 1];
@@ -392,7 +401,7 @@ public abstract class TimeCycleSplineSet {
         boolean mNoMethod = false;
 
         @Override
-        public boolean setProperty(View view, float t, long time, KeyCache cache) {
+        public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             if (view instanceof MotionLayout) {
                 ((MotionLayout) view).setProgress(get(t, time, view, cache));
             } else {

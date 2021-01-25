@@ -19,16 +19,18 @@ package androidx.constraintlayout.motion.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.RectF;
-
-import androidx.constraintlayout.widget.ConstraintAttribute;
-import androidx.constraintlayout.widget.R;
-
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
-import android.view.View;
 import android.view.ViewGroup;
+
+<<<<<<< Updated upstream
+=======
+import androidx.constraintlayout.motion.utils.ViewSpline;
+>>>>>>> Stashed changes
+import androidx.constraintlayout.widget.ConstraintAttribute;
+import androidx.constraintlayout.widget.R;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -65,7 +67,7 @@ public class KeyTrigger extends Key {
     private String mPositiveCross = null;
     private int mTriggerID = UNSET;
     private int mTriggerCollisionId = UNSET;
-    private View mTriggerCollisionView = null;
+    private Widget mTriggerCollisionView = null;
     float mTriggerSlack = .1f;
     private boolean mFireCrossReset = true;
     private boolean mFireNegativeReset = true;
@@ -132,7 +134,7 @@ public class KeyTrigger extends Key {
                 mTriggerCollisionId = toInt(value);
                 break;
             case TRIGGER_COLLISION_VIEW:
-                mTriggerCollisionView = (View) value;
+                mTriggerCollisionView = (Widget) value;
                 break;
             case TRIGGER_SLACK:
                 mTriggerSlack = toFloat(value);
@@ -153,7 +155,7 @@ public class KeyTrigger extends Key {
         }
     }
 
-    private void setUpRect(RectF rect, View child, boolean postLayout) {
+    private void setUpRect(RectF rect, Widget child, boolean postLayout) {
         rect.top = child.getTop();
         rect.bottom = child.getBottom();
         rect.left = child.getLeft();
@@ -163,7 +165,7 @@ public class KeyTrigger extends Key {
         }
     }
 
-    public void conditionallyFire(float pos, View child) {
+    public void conditionallyFire(float pos, Widget child) {
         boolean fireCross = false;
         boolean fireNegative = false;
         boolean firePositive = false;
@@ -249,14 +251,14 @@ public class KeyTrigger extends Key {
         if (fireNegative || fireCross || firePositive) {
             ((MotionLayout) child.getParent()).fireTrigger(mTriggerID, firePositive, pos);
         }
-        View call = (mTriggerReceiver == UNSET) ? child : ((MotionLayout) child.getParent()).findViewById(mTriggerReceiver);
+        Widget call = (mTriggerReceiver == UNSET) ? child : child.findSiblingId(mTriggerReceiver);
 
         if (fireNegative) {
             if (mNegativeCross != null) {
                 fire(mNegativeCross, call);
             }
             if (mViewTransitionOnNegativeCross != UNSET) {
-                ((MotionLayout) child.getParent()).viewTransition(mViewTransitionOnNegativeCross, call);
+                child.parentViewTransition(mViewTransitionOnNegativeCross, call);
             }
         }
         if (firePositive) {
@@ -264,7 +266,7 @@ public class KeyTrigger extends Key {
                 fire(mPositiveCross, call);
             }
             if (mViewTransitionOnPositiveCross != UNSET) {
-                ((MotionLayout) child.getParent()).viewTransition(mViewTransitionOnPositiveCross, call);
+                child.parentViewTransition(mViewTransitionOnPositiveCross, call);
             }
         }
         if (fireCross) {
@@ -272,13 +274,13 @@ public class KeyTrigger extends Key {
                 fire(mCross, call);
             }
             if (mViewTransitionOnCross != UNSET) {
-                ((MotionLayout) child.getParent()).viewTransition(mViewTransitionOnCross, call);
+                child.parentViewTransition(mViewTransitionOnCross, call);
             }
         }
 
     }
 
-    private void fire(String str, View call) {
+    private void fire(String str, Widget call) {
         if (str == null) {
             return;
         }
@@ -300,7 +302,7 @@ public class KeyTrigger extends Key {
             } catch (NoSuchMethodException e) {
                 mMethodHashMap.put(str, null); // record that we could not get this method
                 Log.e(TAG, "Could not find method \"" + str + "\"" + "on class "
-                        + call.getClass().getSimpleName() + " " + Debug.getName(call));
+                        + call.getClass().getSimpleName() + " " +  call.getTypeName());
                 return;
             }
         }
@@ -308,11 +310,11 @@ public class KeyTrigger extends Key {
             method.invoke(call);
         } catch (Exception e) {
             Log.e(TAG, "Exception in call \"" + mCross + "\"" + "on class "
-                    + call.getClass().getSimpleName() + " " + Debug.getName(call));
+                    + call.getClass().getSimpleName() + " " + call.getTypeName());
         }
     }
 
-    private void fireCustom(String str, View view) {
+    private void fireCustom(String str, Widget view) {
         boolean callAll = str.length() == 1;
         if (!callAll) {
             str = str.substring(1).toLowerCase(Locale.ROOT);

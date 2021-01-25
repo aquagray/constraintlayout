@@ -17,7 +17,6 @@
 package androidx.constraintlayout.motion.widget;
 
 import android.graphics.RectF;
-import android.view.View;
 
 import java.util.HashSet;
 
@@ -71,7 +70,7 @@ abstract class KeyPositionBase extends Key {
      * @param value
      * @hide
      */
-    abstract void positionAttributes(View view, RectF start, RectF end, float x, float y, String[] attribute, float[] value);
+    abstract void positionAttributes(Widget view, RectF start, RectF end, float x, float y, String[] attribute, float[] value);
 
     /**
      *

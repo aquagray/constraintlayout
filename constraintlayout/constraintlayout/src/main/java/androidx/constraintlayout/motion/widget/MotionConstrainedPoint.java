@@ -17,14 +17,20 @@
 package androidx.constraintlayout.motion.widget;
 
 import android.os.Build;
-import androidx.constraintlayout.widget.ConstraintAttribute;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.motion.utils.Easing;
-import androidx.constraintlayout.core.widgets.ConstraintWidget;
 import android.util.Log;
 import android.view.View;
 
-import java.util.Arrays;
+<<<<<<< Updated upstream
+import androidx.constraintlayout.core.widgets.ConstraintWidget;
+import androidx.constraintlayout.motion.utils.Easing;
+=======
+import androidx.constraintlayout.core.motion.utils.Easing;
+import androidx.constraintlayout.core.widgets.ConstraintWidget;
+import androidx.constraintlayout.motion.utils.ViewSpline;
+>>>>>>> Stashed changes
+import androidx.constraintlayout.widget.ConstraintAttribute;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -199,7 +205,7 @@ class MotionConstrainedPoint implements Comparable<MotionConstrainedPoint> {
         return Float.compare(position, o.position);
     }
 
-    public void applyParameters(View view) {
+    public void applyParameters(Widget view) {
 
         this.visibility = view.getVisibility();
         this.alpha = (view.getVisibility() != View.VISIBLE) ? 0.0f : view.getAlpha();
@@ -325,7 +331,7 @@ class MotionConstrainedPoint implements Comparable<MotionConstrainedPoint> {
 
     }
 
-    public void setState(View view) {
+    public void setState(Widget view) {
         setBounds(view.getX(), view.getY(), view.getWidth(), view.getHeight());
         applyParameters(view);
     }

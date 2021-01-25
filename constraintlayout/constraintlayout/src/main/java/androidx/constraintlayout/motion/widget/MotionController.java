@@ -73,7 +73,7 @@ public class MotionController {
     private static final String TAG = "MotionController";
     private static final boolean DEBUG = false;
     private static final boolean FAVOR_FIXED_SIZE_VIEWS = false;
-    View mView;
+    Widget mView;
     int mId;
     String mConstraintTag;
     private int mCurveFitType = KeyFrames.UNSET;
@@ -107,7 +107,7 @@ public class MotionController {
     private KeyTrigger[] mKeyTriggers; // splines to calculate values of attributes
     private int mPathMotionArc = UNSET;
     private int mTransformPivotTarget = UNSET; // if set, pivot point is maintained as the other object
-    private View mTransformPivotView = null; // if set, pivot point is maintained as the other object
+    private Widget mTransformPivotView = null; // if set, pivot point is maintained as the other object
     private int mQuantizeMotionSteps = UNSET;
     private float mQuantizeMotionPhase = Float.NaN;
     private Interpolator mQuantizeMotionInterpolator = null;
@@ -134,7 +134,7 @@ public class MotionController {
         return mMotionPaths.get(i);
     }
 
-    MotionController(View view) {
+    MotionController(Widget view) {
         setView(view);
     }
 
@@ -614,15 +614,6 @@ public class MotionController {
         HashSet<String> cycleAttributes = new HashSet<>(); // attributes we need to oscillate
         HashMap<String, Integer> interpolation = new HashMap<>();
         ArrayList<KeyTrigger> triggerList = null;
-        if (DEBUG) {
-            if (mKeyList == null) {
-                Log.v(TAG, ">>>>>>>>>>>>>>> mKeyList==null");
-
-            } else {
-                Log.v(TAG, ">>>>>>>>>>>>>>> mKeyList for " + Debug.getName(mView));
-
-            }
-        }
 
         if (mPathMotionArc != UNSET) {
             mStartMotionPath.mPathMotionArc = mPathMotionArc;
@@ -662,30 +653,6 @@ public class MotionController {
 
         if (triggerList != null) {
             mKeyTriggers = triggerList.toArray(new KeyTrigger[0]);
-        }
-
-        if (DEBUG) {
-            if (!cycleAttributes.isEmpty()) {
-                Log.v(TAG, ">>>>>>>>>>>>>>>>  found cycleA" +
-                        Debug.getName(mView) + " cycles     " +
-                        Arrays.toString(cycleAttributes.toArray()));
-            }
-            if (!splineAttributes.isEmpty()) {
-                Log.v(TAG, ">>>>>>>>>>>>>>>>  found spline " +
-                        Debug.getName(mView) + " attrs      " +
-                        Arrays.toString(splineAttributes.toArray()));
-            }
-            if (!timeCycleAttributes.isEmpty()) {
-                Log.v(TAG, ">>>>>>>>>>>>>>>>  found timeCycle " +
-                        Debug.getName(mView) + " attrs      " +
-                        Arrays.toString(timeCycleAttributes.toArray()));
-            }
-            if (!springAttributes.isEmpty()) {
-                Log.v(TAG, ">>>>>>>>>>>>>>>>  found springs " +
-                        Debug.getName(mView) + " attrs      " +
-                        Arrays.toString(springAttributes.toArray()));
-            }
-
         }
 
         //--------------------------- splines support --------------------
@@ -972,20 +939,21 @@ public class MotionController {
         motionPaths.setBounds((int) mView.getX(), (int) mView.getY(), mView.getWidth(), mView.getHeight());
     }
 
-    public void setView(View view) {
+    public void setView(Widget view) {
         mView = view;
         mId = view.getId();
-        ViewGroup.LayoutParams lp = view.getLayoutParams();
-        if (lp instanceof ConstraintLayout.LayoutParams) {
-            mConstraintTag = ((ConstraintLayout.LayoutParams) lp).getConstraintTag();
-        }
+//        ViewGroup.LayoutParams lp = view.getLayoutParams();
+//        if (lp instanceof ConstraintLayout.LayoutParams) {
+//            mConstraintTag = ((ConstraintLayout.LayoutParams) lp).getConstraintTag();
+//        }
+        mConstraintTag = view.getConstraintTag();
     }
 
-    public View getView() {
+    public Widget getView() {
         return mView;
     }
 
-    void setStartCurrentState(View v) {
+    void setStartCurrentState(Widget v) {
         mStartMotionPath.time = 0;
         mStartMotionPath.position = 0;
         mStartMotionPath.setBounds(v.getX(), v.getY(), v.getWidth(), v.getHeight());
@@ -1021,7 +989,7 @@ public class MotionController {
     private static final int INTERPOLATOR_REFRENCE_ID = -2;
     private static final int INTERPOLATOR_UNDEFINED = -3;
 
-    private static Interpolator getInterpolator(Context context, int type,String interpolatorString, int id ) {
+    private static Interpolator getInterpolator(Object context, int type,String interpolatorString, int id ) {
         switch (type) {
             case SPLINE_STRING:
                 final Easing easing = Easing.getInterpolator(interpolatorString);
@@ -1032,7 +1000,7 @@ public class MotionController {
                     }
                 };
             case INTERPOLATOR_REFRENCE_ID:
-                return AnimationUtils.loadInterpolator(context, id);
+                return AnimationUtils.loadInterpolator((Context) context, id);
             case EASE_IN_OUT:
                 return new AccelerateDecelerateInterpolator();
             case EASE_IN:
@@ -1060,7 +1028,7 @@ public class MotionController {
 
     }
 
-    void setBothStates(View v) {
+    void setBothStates(Widget v) {
         mStartMotionPath.time = 0;
         mStartMotionPath.position = 0;
         mNoMovement=true;
@@ -1134,7 +1102,7 @@ public class MotionController {
      * @param keyCache
      * @return do you need to keep animating
      */
-    boolean interpolate(View child, float global_position, long time, KeyCache keyCache) {
+    boolean interpolate(Widget child, float global_position, long time, KeyCache keyCache) {
         boolean timeAnimation = false;
         float position = getAdjustedPosition(global_position, null);
         // This quantize the position into steps e.g 4 steps = 0-0.25,0.25-0.50 etc
@@ -1186,7 +1154,7 @@ public class MotionController {
             }
             if (mTransformPivotTarget != UNSET) {
                 if (mTransformPivotView == null) {
-                    View layout = (View) child.getParent();
+                    Widget layout = (Widget) child.getParent();
                     mTransformPivotView = layout.findViewById(mTransformPivotTarget);
                 }
                 if (mTransformPivotView != null) {
@@ -1284,13 +1252,13 @@ public class MotionController {
      * of a point on the view (post layout effects are not computed)
      *
      * @param position    position in time
-     * @param locationX   the x location on the view (0 = left edge, 1 = right edge)
-     * @param locationY   the y location on the view (0 = top, 1 = bottom)
+     * @param locationX   the x location on the Widget (0 = left edge, 1 = right edge)
+     * @param locationY   the y location on the Widget (0 = top, 1 = bottom)
      * @param mAnchorDpDt returns the differential of the motion with respect to the position
      */
     void getDpDt(float position, float locationX, float locationY, float[] mAnchorDpDt) {
         if (DEBUG) {
-            Log.v(TAG, Debug.getLoc()+ " "+ Debug.getName(mView)+" position= " + position + " location= " + locationX + " , " + locationY);
+            Log.v(TAG, Debug.getLoc()+ " "+  mView.getTypeName() +" position= " + position + " location= " + locationX + " , " + locationY);
         }
         position = getAdjustedPosition(position, mVelocity);
 
@@ -1331,8 +1299,8 @@ public class MotionController {
      * @param position    position in time
      * @param width       width of the view
      * @param height      height of the view
-     * @param locationX   the x location on the view (0 = left edge, 1 = right edge)
-     * @param locationY   the y location on the view (0 = top, 1 = bottom)
+     * @param locationX   the x location on the Widget (0 = left edge, 1 = right edge)
+     * @param locationY   the y location on the Widget (0 = top, 1 = bottom)
      * @param mAnchorDpDt returns the differential of the motion with respect to the position
      */
     void getPostLayoutDvDp(float position, int width ,int height, float locationX, float locationY, float[] mAnchorDpDt) {
@@ -1417,11 +1385,10 @@ public class MotionController {
     }
 
     String name() {
-        Context context = mView.getContext();
-        return context.getResources().getResourceEntryName(mView.getId());
+        return mView.getTypeName();
     }
 
-    void positionKeyframe(View view, KeyPositionBase key, float x, float y, String[] attribute, float[] value) {
+    void positionKeyframe(Widget view, KeyPositionBase key, float x, float y, String[] attribute, float[] value) {
         RectF start = new RectF();
         start.left = mStartMotionPath.x;
         start.top = mStartMotionPath.y;

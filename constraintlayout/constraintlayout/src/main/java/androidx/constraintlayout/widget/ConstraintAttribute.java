@@ -20,14 +20,13 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-
-import androidx.constraintlayout.motion.widget.Debug;
-
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
 import android.view.View;
+
+import androidx.constraintlayout.motion.widget.Widget;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -356,8 +355,8 @@ public class ConstraintAttribute {
         }
     }
 
-    public void applyCustom(View view) {
-        Class<? extends View> viewClass = view.getClass();
+    public void applyCustom(Widget view) {
+        Class viewClass = view.getClass();
         String name = this.mName;
         String methodName = name;
         if (!mMethod) {
@@ -370,8 +369,8 @@ public class ConstraintAttribute {
                 case REFERENCE_TYPE:
                     method = viewClass.getMethod(methodName, Integer.TYPE);
                     method.invoke(view, this.mIntegerValue);
-                    if (AttributeType.REFERENCE_TYPE == mType)
-                        Log.v(TAG, " call ing " + methodName + "  " + Debug.getName(view.getContext(), this.mIntegerValue));
+//                    if (AttributeType.REFERENCE_TYPE == mType)
+//                        Log.v(TAG, " call ing " + methodName + "  " + Debug.getName(view.getContext(), this.mIntegerValue));
                     break;
                 case FLOAT_TYPE:
                     method = viewClass.getMethod(methodName, Float.TYPE);
@@ -423,8 +422,8 @@ public class ConstraintAttribute {
         return c;
     }
 
-    public void setInterpolatedValue(View view, float[] value) {
-        Class<? extends View> viewClass = view.getClass();
+    public void setInterpolatedValue(Widget view, float[] value) {
+        Class viewClass = view.getClass();
 
         String methodName = "set" + mName;
         try {
@@ -472,10 +471,10 @@ public class ConstraintAttribute {
                     break;
             }
         } catch (NoSuchMethodException e) {
-            Log.e(TAG, "no method " + methodName + " on View \"" + Debug.getName(view) + "\"");
+            Log.e(TAG, "no method " + methodName + " on View \"" +  view.getTypeName() + "\"");
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            Log.e(TAG, "cannot access method " + methodName + " on View \"" + Debug.getName(view) + "\"");
+            Log.e(TAG, "cannot access method " + methodName + " on View \"" +view.getTypeName() + "\"");
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
