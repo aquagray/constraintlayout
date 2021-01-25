@@ -25,6 +25,7 @@ import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
+import androidx.constraintlayout.motion.utils.ViewSpline;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.R;
 
@@ -105,7 +106,7 @@ public class KeyTrigger extends Key {
     }
 
     @Override
-    public void addValues(HashMap<String, SplineSet> splines) {
+    public void addValues(HashMap<String, ViewSpline> splines) {
     }
 
     @Override
