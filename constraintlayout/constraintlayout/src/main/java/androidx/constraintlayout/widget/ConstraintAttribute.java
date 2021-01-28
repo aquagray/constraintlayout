@@ -26,7 +26,7 @@ import android.util.TypedValue;
 import android.util.Xml;
 import android.view.View;
 
-import androidx.constraintlayout.motion.widget.Widget;
+import androidx.constraintlayout.core.motion.utils.Widget;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -423,7 +423,7 @@ public class ConstraintAttribute {
     }
 
     public void setInterpolatedValue(Widget view, float[] value) {
-        Class viewClass = view.getClass();
+        Class viewClass = view.getWidgetClass();
 
         String methodName = "set" + mName;
         try {
@@ -431,11 +431,11 @@ public class ConstraintAttribute {
             switch (mType) {
                 case INT_TYPE:
                     method = viewClass.getMethod(methodName, Integer.TYPE);
-                    method.invoke(view, (int) value[0]);
+                    method.invoke(view.getPlatformObject(), (int) value[0]);
                     break;
                 case FLOAT_TYPE:
                     method = viewClass.getMethod(methodName, Float.TYPE);
-                    method.invoke(view, value[0]);
+                    method.invoke(view.getPlatformObject(), value[0]);
                     break;
                 case COLOR_DRAWABLE_TYPE: {
                     method = viewClass.getMethod(methodName, Drawable.class);
@@ -446,7 +446,7 @@ public class ConstraintAttribute {
                     int color = a << 24 | (r << 16) | (g << 8) | b;
                     ColorDrawable drawable = new ColorDrawable(); // TODO cache
                     drawable.setColor(color);
-                    method.invoke(view, drawable);
+                    method.invoke(view.getPlatformObject(), drawable);
                 }
                 break;
                 case COLOR_TYPE:
@@ -456,18 +456,18 @@ public class ConstraintAttribute {
                     int b = clamp((int) ((float) Math.pow(value[2], 1.0 / 2.2) * 255.0f));
                     int a = clamp((int) (value[3] * 255.0f));
                     int color = a << 24 | (r << 16) | (g << 8) | b;
-                    method.invoke(view, color);
+                    method.invoke(view.getPlatformObject(), color);
                     break;
                 case STRING_TYPE:
                     throw new RuntimeException("unable to interpolate strings " + mName);
 
                 case BOOLEAN_TYPE:
                     method = viewClass.getMethod(methodName, Boolean.TYPE);
-                    method.invoke(view, value[0] > 0.5f);
+                    method.invoke(view.getPlatformObject(), value[0] > 0.5f);
                     break;
                 case DIMENSION_TYPE:
                     method = viewClass.getMethod(methodName, Float.TYPE);
-                    method.invoke(view, value[0]);
+                    method.invoke(view.getPlatformObject(), value[0]);
                     break;
             }
         } catch (NoSuchMethodException e) {

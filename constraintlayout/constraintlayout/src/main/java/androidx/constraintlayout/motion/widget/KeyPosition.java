@@ -18,18 +18,17 @@ package androidx.constraintlayout.motion.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.RectF;
-
-import androidx.constraintlayout.motion.utils.ViewSpline;
-import androidx.constraintlayout.widget.R;
-import androidx.constraintlayout.core.motion.utils.Easing;
-
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
-import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.constraintlayout.core.motion.utils.ClRect;
+import androidx.constraintlayout.core.motion.utils.Easing;
+import androidx.constraintlayout.core.motion.utils.Widget;
+import androidx.constraintlayout.motion.utils.ViewSpline;
+import androidx.constraintlayout.widget.R;
 
 import java.util.HashMap;
 
@@ -143,7 +142,7 @@ public class KeyPosition extends KeyPositionBase {
     }
 
     @Override
-    public void positionAttributes(View view, RectF start, RectF end, float x, float y, String[] attribute, float[] value) {
+    public void positionAttributes(Widget view, ClRect start, ClRect end, float x, float y, String[] attribute, float[] value) {
         switch (mPositionType) {
 
             case TYPE_PATH:
@@ -160,7 +159,7 @@ public class KeyPosition extends KeyPositionBase {
         }
     }
 
-    void positionPathAttributes(RectF start, RectF end, float x, float y, String[] attribute, float[] value) {
+    void positionPathAttributes(ClRect start, ClRect end, float x, float y, String[] attribute, float[] value) {
         float startCenterX = start.centerX();
         float startCenterY = start.centerY();
         float endCenterX = end.centerX();
@@ -192,7 +191,7 @@ public class KeyPosition extends KeyPositionBase {
         }
     }
 
-    void positionScreenAttributes(View view, RectF start, RectF end, float x, float y, String[] attribute, float[] value) {
+    void positionScreenAttributes(Widget view, ClRect start, ClRect end, float x, float y, String[] attribute, float[] value) {
         float startCenterX = start.centerX();
         float startCenterY = start.centerY();
         float endCenterX = end.centerX();
@@ -219,7 +218,7 @@ public class KeyPosition extends KeyPositionBase {
         }
     }
 
-    void positionCartAttributes(RectF start, RectF end, float x, float y, String[] attribute, float[] value) {
+    void positionCartAttributes(ClRect start, ClRect end, float x, float y, String[] attribute, float[] value) {
         float startCenterX = start.centerX();
         float startCenterY = start.centerY();
         float endCenterX = end.centerX();
@@ -243,7 +242,7 @@ public class KeyPosition extends KeyPositionBase {
     }
 
     @Override
-    public boolean intersects(int layoutWidth, int layoutHeight, RectF start, RectF end, float x, float y) {
+    public boolean intersects(int layoutWidth, int layoutHeight, ClRect start, ClRect end, float x, float y) {
         calcPosition(layoutWidth, layoutHeight, start.centerX(), start.centerY(), end.centerX(), end.centerY());
         if ((Math.abs(x - mCalculatedPositionX) < SELECTION_SLOPE)
                 && (Math.abs(y - mCalculatedPositionY) < SELECTION_SLOPE)) {

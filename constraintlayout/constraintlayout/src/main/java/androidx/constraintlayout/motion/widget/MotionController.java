@@ -16,32 +16,22 @@
 
 package androidx.constraintlayout.motion.widget;
 
-import android.content.Context;
-import android.graphics.RectF;
-
-import androidx.constraintlayout.core.motion.utils.KeyCache;
-import androidx.constraintlayout.core.motion.utils.SplineSet;
-import androidx.constraintlayout.motion.utils.ViewTimeCycle;
-import androidx.constraintlayout.motion.utils.ViewOscillator;
-import androidx.constraintlayout.motion.utils.ViewSpline;
-import androidx.constraintlayout.widget.ConstraintAttribute;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.core.motion.utils.ClRect;
 import androidx.constraintlayout.core.motion.utils.CurveFit;
 import androidx.constraintlayout.core.motion.utils.Easing;
+import androidx.constraintlayout.core.motion.utils.KeyCache;
+import androidx.constraintlayout.core.motion.utils.KeyFrameArray;
+import androidx.constraintlayout.core.motion.utils.Log;
+import androidx.constraintlayout.core.motion.utils.MotionInterpolator;
+import androidx.constraintlayout.core.motion.utils.SplineSet;
 import androidx.constraintlayout.core.motion.utils.VelocityMatrix;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.core.widgets.ConstraintWidget;
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.OvershootInterpolator;
+import androidx.constraintlayout.motion.utils.ViewOscillator;
+import androidx.constraintlayout.motion.utils.ViewSpline;
+import androidx.constraintlayout.motion.utils.ViewTimeCycle;
+import androidx.constraintlayout.widget.ConstraintAttribute;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +39,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static androidx.constraintlayout.motion.widget.Key.UNSET;
+import static androidx.constraintlayout.core.motion.utils.Widget.UNSET;
 
 /**
  * This contains the picture of a view through the a transition and is used to interpolate it
@@ -115,7 +105,7 @@ public class MotionController {
     private Widget mTransformPivotView = null; // if set, pivot point is maintained as the other object
     private int mQuantizeMotionSteps = UNSET;
     private float mQuantizeMotionPhase = Float.NaN;
-    private Interpolator mQuantizeMotionInterpolator = null;
+    private MotionInterpolator mQuantizeMotionInterpolator = null;
     private boolean mNoMovement = false;
 
     /**
@@ -453,12 +443,12 @@ public class MotionController {
     }
 
     KeyPositionBase getPositionKeyframe(int layoutWidth, int layoutHeight, float x, float y) {
-        RectF start = new RectF();
+        ClRect start = new ClRect();
         start.left = mStartMotionPath.x;
         start.top = mStartMotionPath.y;
         start.right = start.left + mStartMotionPath.width;
         start.bottom = start.top + mStartMotionPath.height;
-        RectF end = new RectF();
+        ClRect end = new ClRect();
         end.left = mEndMotionPath.x;
         end.top = mEndMotionPath.y;
         end.right = end.left + mEndMotionPath.width;
@@ -666,7 +656,7 @@ public class MotionController {
             for (String attribute : splineAttributes) {
                 ViewSpline splineSets;
                 if (attribute.startsWith("CUSTOM,")) {
-                    SparseArray<ConstraintAttribute> attrList = new SparseArray<>();
+                    KeyFrameArray<ConstraintAttribute> attrList = new KeyFrameArray<>();
                     String customAttributeName = attribute.split(",")[1];
                     for (Key key : mKeyList) {
                         if (key.mCustomConstraints == null) {
@@ -724,7 +714,7 @@ public class MotionController {
 
                 ViewTimeCycle splineSets = null;
                 if (attribute.startsWith("CUSTOM,")) {
-                    SparseArray<ConstraintAttribute> attrList = new SparseArray<>();
+                    KeyFrameArray<ConstraintAttribute> attrList = new KeyFrameArray<>();
                     String customAttributeName = attribute.split(",")[1];
                     for (Key key : mKeyList) {
                         if (key.mCustomConstraints == null) {
@@ -994,30 +984,30 @@ public class MotionController {
     private static final int INTERPOLATOR_REFRENCE_ID = -2;
     private static final int INTERPOLATOR_UNDEFINED = -3;
 
-    private static Interpolator getInterpolator(Object context, int type,String interpolatorString, int id ) {
+    private static MotionInterpolator getInterpolator(Object context, int type,String interpolatorString, int id ) {
         switch (type) {
             case SPLINE_STRING:
                 final Easing easing = Easing.getInterpolator(interpolatorString);
-                return new Interpolator() {
+                return new MotionInterpolator() {
                     @Override
                     public float getInterpolation(float v) {
                         return (float) easing.get(v);
                     }
                 };
             case INTERPOLATOR_REFRENCE_ID:
-                return AnimationUtils.loadInterpolator((Context) context, id);
+                return Easing.loadInterpolator(context, id);
             case EASE_IN_OUT:
-                return new AccelerateDecelerateInterpolator();
+                return Easing.getAccelerateDecelerateInterpolator();
             case EASE_IN:
-                return new AccelerateInterpolator();
+                return Easing.getAccelerateInterpolator();
             case EASE_OUT:
-                return new DecelerateInterpolator();
+                return Easing.getDecelerateInterpolator();
             case LINEAR:
                 return null;
             case BOUNCE:
-                return new BounceInterpolator();
+                return Easing.getBounceInterpolator();
             case OVERSHOOT:
-                return new OvershootInterpolator();
+                return Easing.getOvershootInterpolator();
         }
         return null;
     }
@@ -1199,7 +1189,7 @@ public class MotionController {
                 } else if (position >= 1.0f) {
                     child.setVisibility(mEndPoint.visibility);
                 } else if (mEndPoint.visibility != mStartPoint.visibility) {
-                    child.setVisibility(View.VISIBLE);
+                    child.setVisibility(Widget.VISIBLE);
                 }
             }
 
@@ -1232,9 +1222,7 @@ public class MotionController {
             }
             if (mEndMotionPath.width != mStartMotionPath.width
                     || mEndMotionPath.height != mStartMotionPath.height) {
-                int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
-                int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
-                child.measure(widthMeasureSpec, heightMeasureSpec);
+                child.measureExactly(width, height);
             }
             child.layout(l, t, r, b);
         }
@@ -1394,12 +1382,12 @@ public class MotionController {
     }
 
     void positionKeyframe(Widget view, KeyPositionBase key, float x, float y, String[] attribute, float[] value) {
-        RectF start = new RectF();
+        ClRect start = new ClRect();
         start.left = mStartMotionPath.x;
         start.top = mStartMotionPath.y;
         start.right = start.left + mStartMotionPath.width;
         start.bottom = start.top + mStartMotionPath.height;
-        RectF end = new RectF();
+        ClRect end = new ClRect();
         end.left = mEndMotionPath.x;
         end.top = mEndMotionPath.y;
         end.right = end.left + mEndMotionPath.width;

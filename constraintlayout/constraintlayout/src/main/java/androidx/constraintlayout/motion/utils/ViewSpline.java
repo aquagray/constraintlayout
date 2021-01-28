@@ -19,13 +19,13 @@ package androidx.constraintlayout.motion.utils;
 
 import android.os.Build;
 import android.util.Log;
-import android.util.SparseArray;
 
 import androidx.constraintlayout.core.motion.utils.CurveFit;
+import androidx.constraintlayout.core.motion.utils.KeyFrameArray;
 import androidx.constraintlayout.core.motion.utils.SplineSet;
 import androidx.constraintlayout.motion.widget.Key;
 import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.constraintlayout.motion.widget.Widget;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +36,7 @@ public abstract class ViewSpline extends SplineSet {
 
     public abstract void setProperty(Widget view, float t);
 
-    public static ViewSpline makeCustomSpline(String str, SparseArray<ConstraintAttribute> attrList) {
+    public static ViewSpline makeCustomSpline(String str,   KeyFrameArray<ConstraintAttribute> attrList) {
         return new CustomSet(str, attrList);
     }
 
@@ -181,10 +181,10 @@ public abstract class ViewSpline extends SplineSet {
 
     public static class CustomSet extends ViewSpline {
         String mAttributeName;
-        SparseArray<ConstraintAttribute> mConstraintAttributeList;
+        KeyFrameArray<ConstraintAttribute> mConstraintAttributeList;
         float[] mTempValues;
 
-        public CustomSet(String attribute, SparseArray<ConstraintAttribute> attrList) {
+        public CustomSet(String attribute,  KeyFrameArray<ConstraintAttribute> attrList) {
             mAttributeName = attribute.split(",")[1];
             mConstraintAttributeList = attrList;
         }

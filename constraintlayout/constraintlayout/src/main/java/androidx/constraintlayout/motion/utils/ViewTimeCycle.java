@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package androidx.constraintlayout.motion.widget;
+package androidx.constraintlayout.motion.utils;
 
 import android.os.Build;
 import android.util.Log;
-import android.util.SparseArray;
 
- import androidx.constraintlayout.motion.utils.CurveFit;
-import androidx.constraintlayout.motion.utils.Oscillator;
-
+import androidx.constraintlayout.core.motion.utils.CurveFit;
 import androidx.constraintlayout.core.motion.utils.KeyCache;
-
-
+import androidx.constraintlayout.core.motion.utils.KeyFrameArray;
+import androidx.constraintlayout.core.motion.utils.Oscillator;
+import androidx.constraintlayout.core.motion.utils.TimeCycleSplineSet;
+import androidx.constraintlayout.motion.widget.Key;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +37,7 @@ import java.text.DecimalFormat;
  *
  * @hide
  */
-public abstract class TimeCycleSplineSet {
+public abstract class ViewTimeCycle extends TimeCycleSplineSet{
     private static final String TAG = "SplineSet";
     protected CurveFit mCurveFit;
     protected int mWaveShape = 0;
@@ -122,12 +123,12 @@ public abstract class TimeCycleSplineSet {
         return mCurveFit;
     }
 
-    static TimeCycleSplineSet makeCustomSpline(String str, SparseArray<ConstraintAttribute> attrList) {
+    public static ViewTimeCycle makeCustomSpline(String str, KeyFrameArray<ConstraintAttribute> attrList) {
         return new CustomSet(str, attrList);
     }
 
-    static TimeCycleSplineSet makeSpline(String str, long currentTime) {
-        TimeCycleSplineSet timeCycle;
+    public static ViewTimeCycle makeSpline(String str, long currentTime) {
+        ViewTimeCycle timeCycle;
         switch (str) {
             case Key.ALPHA:
                 timeCycle = new AlphaSet();
@@ -217,7 +218,7 @@ public abstract class TimeCycleSplineSet {
         mCurveFit = CurveFit.get(curveType, time, values);
     }
 
-    static class ElevationSet extends TimeCycleSplineSet {
+    static class ElevationSet extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -227,7 +228,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class AlphaSet extends TimeCycleSplineSet {
+    static class AlphaSet extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setAlpha(get(t, time, view, cache));
@@ -235,7 +236,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class RotationSet extends TimeCycleSplineSet {
+    static class RotationSet extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setRotation(get(t, time, view, cache));
@@ -243,7 +244,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class RotationXset extends TimeCycleSplineSet {
+    static class RotationXset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setRotationX(get(t, time, view, cache));
@@ -251,7 +252,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class RotationYset extends TimeCycleSplineSet {
+    static class RotationYset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setRotationY(get(t, time, view, cache));
@@ -259,7 +260,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class PathRotate extends TimeCycleSplineSet {
+    public static class PathRotate extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             return mContinue;
@@ -271,7 +272,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class ScaleXset extends TimeCycleSplineSet {
+    static class ScaleXset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setScaleX(get(t, time, view, cache));
@@ -279,7 +280,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class ScaleYset extends TimeCycleSplineSet {
+    static class ScaleYset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setScaleY(get(t, time, view, cache));
@@ -287,7 +288,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class TranslationXset extends TimeCycleSplineSet {
+    static class TranslationXset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setTranslationX(get(t, time, view, cache));
@@ -295,7 +296,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class TranslationYset extends TimeCycleSplineSet {
+    static class TranslationYset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             view.setTranslationY(get(t, time, view, cache));
@@ -303,7 +304,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class TranslationZset extends TimeCycleSplineSet {
+    static class TranslationZset extends ViewTimeCycle {
         @Override
         public boolean setProperty(Widget view, float t, long time, KeyCache cache) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -313,14 +314,14 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class CustomSet extends TimeCycleSplineSet {
+    public static class CustomSet extends ViewTimeCycle {
         String mAttributeName;
-        SparseArray<ConstraintAttribute> mConstraintAttributeList;
-        SparseArray<float[]> mWaveProperties = new SparseArray<>();
+        KeyFrameArray<ConstraintAttribute> mConstraintAttributeList;
+        KeyFrameArray<float[]> mWaveProperties = new KeyFrameArray<>();
         float[] mTempValues;
         float[] mCache;
 
-        public CustomSet(String attribute, SparseArray<ConstraintAttribute> attrList) {
+        public CustomSet(String attribute, KeyFrameArray<ConstraintAttribute> attrList) {
             mAttributeName = attribute.split(",")[1];
             mConstraintAttributeList = attrList;
         }
@@ -387,7 +388,7 @@ public abstract class TimeCycleSplineSet {
         }
     }
 
-    static class ProgressSet extends TimeCycleSplineSet {
+    static class ProgressSet extends ViewTimeCycle {
         boolean mNoMethod = false;
 
         @Override

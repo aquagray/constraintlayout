@@ -319,8 +319,8 @@ public class ViewTransition {
     }
 
     void applyIndependentTransition(ViewTransitionController controller, MotionLayout motionLayout,View view) {
-        MotionController motionController = new MotionController(view);
-        motionController.setBothStates(view);
+        MotionController motionController = new MotionController(motionLayout.mWidgetFactory.getWidget(view));
+        motionController.setBothStates(motionLayout.mWidgetFactory.getWidget(view));
         mKeyFrames.addAllFrames(motionController);
         motionController.setup(motionLayout.getWidth(), motionLayout.getHeight(), mDuration, System.nanoTime());
         new Animate(controller, motionController, mDuration, getInterpolator(motionLayout.getContext()), mSetsTag, mClearsTag);

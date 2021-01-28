@@ -23,8 +23,9 @@ import java.util.Arrays;
  *
  * @hide
  */
-public class Easing {
+public class Easing implements MotionInterpolator{
     static Easing sDefault = new Easing();
+    static InterpolationFactory factory =new InterpolationFactory();
     String str = "identity";
     private final static String STANDARD = "cubic(0.4, 0.0, 0.2, 1)";
     private final static String ACCELERATE = "cubic(0.4, 0.05, 0.8, 0.7)";
@@ -65,6 +66,61 @@ public class Easing {
 
         }
         return sDefault;
+    }
+
+    @Override
+    public float getInterpolation(float v) {
+        return (float) get(v);
+    }
+
+    public static class InterpolationFactory {
+        public static MotionInterpolator loadInterpolator(Object context, int id) {
+            return null;
+        }
+
+        public static MotionInterpolator getAccelerateDecelerateInterpolator() {
+            return new CubicEasing(STANDARD);
+        }
+
+        public static MotionInterpolator getAccelerateInterpolator() {
+            return new CubicEasing(ACCELERATE);
+        }
+
+        public static MotionInterpolator getDecelerateInterpolator() {
+            return new CubicEasing(DECELERATE);
+        }
+
+        public static MotionInterpolator getBounceInterpolator() {
+            return new StepCurve("spline(0,0.2.5,0.5,0.75,1.0,0.5,1.0,0.75,1.0");
+        }
+
+        public static MotionInterpolator getOvershootInterpolator() {
+            return new StepCurve("spline(0,0.2.5,0.5,0.75,1.0,1.2,0.9,1.1,1.0");
+        }
+
+    }
+    public static MotionInterpolator loadInterpolator(Object context, int id) {
+        return  factory.loadInterpolator(context,id);
+    }
+
+    public static MotionInterpolator getAccelerateDecelerateInterpolator() {
+        return factory.getAccelerateDecelerateInterpolator();
+    }
+
+    public static MotionInterpolator getAccelerateInterpolator() {
+        return factory.getAccelerateInterpolator();
+    }
+
+    public static MotionInterpolator getDecelerateInterpolator() {
+        return factory.getDecelerateInterpolator();
+    }
+
+    public static MotionInterpolator getBounceInterpolator() {
+        return factory.getBounceInterpolator();
+    }
+
+    public static MotionInterpolator getOvershootInterpolator() {
+        return factory.getOvershootInterpolator();
     }
 
     public double get(double x) {
@@ -194,4 +250,6 @@ public class Easing {
             return (y2 - y1) * (x - x1) / (x2 - x1) + y1;
         }
     }
+
+
 }

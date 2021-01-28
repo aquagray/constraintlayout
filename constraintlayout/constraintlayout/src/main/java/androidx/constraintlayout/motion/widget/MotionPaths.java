@@ -16,11 +16,11 @@
 
 package androidx.constraintlayout.motion.widget;
 
-import android.util.Log;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.core.motion.utils.Easing;
+import androidx.constraintlayout.core.motion.utils.Log;
+import androidx.constraintlayout.core.motion.utils.NotNull;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -629,10 +629,7 @@ class MotionPaths implements Comparable<MotionPaths> {
         boolean remeasure = i_width != view.getMeasuredWidth() || i_height != view.getMeasuredHeight();
 
         if (remeasure) {
-            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(i_width, View.MeasureSpec.EXACTLY);
-            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(i_height, View.MeasureSpec.EXACTLY);
-
-            view.measure(widthMeasureSpec, heightMeasureSpec);
+            view.measureExactly(i_width, i_height);
         }
 
         view.layout(l, t, r, b);
@@ -905,7 +902,7 @@ class MotionPaths implements Comparable<MotionPaths> {
     }
 
     @Override
-    public int compareTo(@NonNull MotionPaths o) {
+    public int compareTo(@NotNull MotionPaths o) {
         return Float.compare(position, o.position);
     }
 

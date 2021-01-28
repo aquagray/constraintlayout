@@ -18,13 +18,14 @@ package androidx.constraintlayout.motion.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
+import androidx.constraintlayout.core.motion.utils.ClRect;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.motion.utils.ViewSpline;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.R;
@@ -76,8 +77,8 @@ public class KeyTrigger extends Key {
     int mViewTransitionOnPositiveCross = UNSET;
     int mViewTransitionOnCross = UNSET;
 
-    RectF mCollisionRect = new RectF();
-    RectF mTargetRect = new RectF();
+    ClRect mCollisionRect = new ClRect();
+    ClRect mTargetRect = new ClRect();
     HashMap<String, Method> mMethodHashMap = new HashMap<>();
     public static final int KEY_TYPE = 5;
 
@@ -152,7 +153,7 @@ public class KeyTrigger extends Key {
         }
     }
 
-    private void setUpRect(RectF rect, Widget child, boolean postLayout) {
+    private void setUpRect(ClRect rect, Widget child, boolean postLayout) {
         rect.top = child.getTop();
         rect.bottom = child.getBottom();
         rect.left = child.getLeft();

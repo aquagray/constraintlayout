@@ -18,10 +18,11 @@ package androidx.constraintlayout.motion.widget;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import androidx.constraintlayout.widget.ConstraintAttribute;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.Log;
 import android.util.Xml;
+
+import androidx.constraintlayout.widget.ConstraintAttribute;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -142,7 +143,7 @@ public class KeyFrames {
 
         if (list != null) {
             for (Key key : list) {
-                String tag = ((ConstraintLayout.LayoutParams) (motionController.mView.getLayoutParams())).constraintTag;
+                String tag =  motionController.mView.getConstraintTag();
                 if (key.matches(tag)) {
                     motionController.addKey(key);
                 }

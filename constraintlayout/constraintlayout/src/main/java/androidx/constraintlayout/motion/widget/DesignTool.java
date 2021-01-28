@@ -16,12 +16,13 @@
 
 package androidx.constraintlayout.motion.widget;
 
-import androidx.constraintlayout.widget.ConstraintSet;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.constraintlayout.widget.R;
+
+import androidx.constraintlayout.core.motion.utils.Widget;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.HashMap;
 
@@ -645,7 +646,7 @@ public class DesignTool implements ProxyInterface {
         if (keyFrame instanceof KeyPositionBase) {
             KeyPositionBase key = (KeyPositionBase) keyFrame;
             MotionController motionController = mMotionLayout.mFrameArrayList.get((View) view);
-            motionController.positionKeyframe((View) view, key, x, y, attribute, value);
+            motionController.positionKeyframe((Widget) view, key, x, y, attribute, value);
             mMotionLayout.rebuildScene();
             mMotionLayout.mInTransition = true;
             return true;

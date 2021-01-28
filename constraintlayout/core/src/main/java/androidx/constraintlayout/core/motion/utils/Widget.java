@@ -1,8 +1,13 @@
-package androidx.constraintlayout.motion.widget;
+package androidx.constraintlayout.core.motion.utils;
 
-import android.graphics.Matrix;
 
 public interface Widget {
+    public static final int VISIBLE = 0;
+    public static final int INVISIBLE = 4;
+    public static final int GONE = 8;
+    public static final int UNSET = -1;
+
+
     void setRotation(float rotation);
 
     void setRotationY(float rotationY);
@@ -35,7 +40,7 @@ public interface Widget {
 
     void layout(int l, int t, int r, int b);
 
-    void measure(int widthMeasureSpec, int heightMeasureSpec);
+    void measureExactly(int width, int height);
 
     int getWidth();
 
@@ -107,7 +112,17 @@ public interface Widget {
 
     int getMeasuredHeight();
 
+    Class getWidgetClass();
+
+    Object getPlatformObject();
+
+    static interface Matrix {
+        void mapRect(ClRect rect);
+    }
     Matrix getMatrix();
 
     void parentViewTransition(int mViewTransitionOnNegativeCross, Widget call);
+
+    void setTag(int tag, Object value);
+    Object getTag(int tag);
 }

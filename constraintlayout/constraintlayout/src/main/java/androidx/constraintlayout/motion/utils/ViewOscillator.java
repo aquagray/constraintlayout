@@ -20,8 +20,9 @@ import android.util.Log;
 
 import androidx.constraintlayout.motion.widget.Key;
 import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.constraintlayout.motion.widget.Widget;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.widget.ConstraintAttribute;
+import androidx.constraintlayout.core.motion.utils.KeyCycleOscillator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

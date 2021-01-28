@@ -1005,7 +1005,7 @@ public class MotionLayout extends ConstraintLayout implements
     private boolean mTemporalInterpolator = false;
     private StopLogic mStopLogic = new StopLogic();
     private DecelerateInterpolator mDecelerateLogic = new DecelerateInterpolator();
-
+    ViewWidget.ViewWidgetFactory mWidgetFactory = new ViewWidget.ViewWidgetFactory();
     private DesignTool mDesignTool;
 
     boolean firstDown = true;
@@ -1943,7 +1943,7 @@ public class MotionLayout extends ConstraintLayout implements
             if (frame == null) {
                 continue;
             }
-            frame.setStartCurrentState(v);
+            frame.setStartCurrentState(mWidgetFactory.getWidget(v));
         }
     }
 
@@ -2075,7 +2075,7 @@ public class MotionLayout extends ConstraintLayout implements
         mFrameArrayList.clear();
         for (int i = 0; i < n; i++) {
             View v = getChildAt(i);
-            MotionController f = new MotionController(v);
+            MotionController f = new MotionController(mWidgetFactory.getWidget(v));
             mFrameArrayList.put(v, f);
             controllers.put(v.getId(),mFrameArrayList.get(v));
         }
@@ -2502,7 +2502,7 @@ public class MotionLayout extends ConstraintLayout implements
             int []ids = new int[n];
             for (int i = 0; i < n; i++) {
                 View v = getChildAt(i);
-                MotionController motionController = new MotionController(v);
+                MotionController motionController = new MotionController(mWidgetFactory.getWidget(v));
                 controllers.put(ids[i] = v.getId(),motionController);
                 mFrameArrayList.put(v, motionController);
             }
@@ -3118,6 +3118,7 @@ public class MotionLayout extends ConstraintLayout implements
      *
      * @param canvas
      */
+    @SuppressLint("Recycle") // bug
     @Override
     protected void dispatchDraw(Canvas canvas) {
         if (DEBUG) {
@@ -3228,7 +3229,7 @@ public class MotionLayout extends ConstraintLayout implements
             final View child = getChildAt(i);
             final MotionController frame = mFrameArrayList.get(child);
             if (frame != null) {
-                frame.interpolate(child, interPos, time, mKeyCache);
+                frame.interpolate(mWidgetFactory.getWidget(child), interPos, time, mKeyCache);
             }
         }
         if (mMeasureDuringTransition) {
@@ -3344,7 +3345,7 @@ public class MotionLayout extends ConstraintLayout implements
                 final View child = getChildAt(i);
                 final MotionController frame = mFrameArrayList.get(child);
                 if (frame != null) {
-                    mKeepAnimating |= frame.interpolate(child, interPos, time, mKeyCache);
+                    mKeepAnimating |= frame.interpolate(mWidgetFactory.getWidget(child), interPos, time, mKeyCache);
                 }
             }
             if (DEBUG) {

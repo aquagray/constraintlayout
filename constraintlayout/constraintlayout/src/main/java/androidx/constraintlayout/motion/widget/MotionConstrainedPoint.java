@@ -17,19 +17,15 @@
 package androidx.constraintlayout.motion.widget;
 
 import android.os.Build;
-
 import android.util.Log;
 import android.view.View;
 
-
+import androidx.constraintlayout.core.motion.utils.Easing;
+import androidx.constraintlayout.core.motion.utils.Widget;
 import androidx.constraintlayout.core.widgets.ConstraintWidget;
-
+import androidx.constraintlayout.motion.utils.ViewSpline;
 import androidx.constraintlayout.widget.ConstraintAttribute;
 import androidx.constraintlayout.widget.ConstraintSet;
-
-import androidx.constraintlayout.motion.utils.ViewSpline;
-
-import androidx.constraintlayout.core.motion.utils.Easing;
 
 import java.util.HashMap;
 import java.util.HashSet;
